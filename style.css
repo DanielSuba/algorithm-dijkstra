@@ -1,0 +1,8 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: sans-serif;
+    background-color: #cff1ff;
+    margin-top: 20px;
+}
