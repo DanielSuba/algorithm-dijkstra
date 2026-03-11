@@ -14,8 +14,25 @@
     <div class="controls">
     <label>Height: <input id="row" type="number" value="10" min="1" max="50"></label>
     <label>Length: <input id="col" type="number" value="10" min="1" max="50"></label>
+    <button id="generate" >Generate</button>
+    <button id="ramdomize" >Ramdomize</button>
+    </div>
+  <table>
+
+  <div class="slidecontainer">
+    <tr>
+    <th>Speed: <output id="speedVal" type="number" value="0" min="1"></output></th>
+    <th><input type="range" min="1" max="500" value="100" class="slider" id="speed"></th>
+    </tr>
+  </table>
+  </div>
+
+  <div class="controls">
     <button id="start" >Start</button>
-    
+    <button id="stop" >Stop</button>
+    <button id="reset" >Reset</button>
+    </div>
+
     </div>
     <div id="grid-container"></div>
 
