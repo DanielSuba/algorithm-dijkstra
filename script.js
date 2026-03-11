@@ -56,6 +56,15 @@ function createGrid() {
                 nodeElement.classList.add('end');
             }
             
+            // Obsługa kliknięcia dla ścian
+            nodeElement.addEventListener('click', () => {
+                // Zabezpieczenia 3
+                if ((r === START_NODE.row && c === START_NODE.col) || 
+                    (r === END_NODE.row && c === END_NODE.col)) return;
+
+                nodeElement.classList.toggle('wall');
+                gridLogic[r][c].isWall = !gridLogic[r][c].isWall; // Aktualizacja logiki
+            });
 
             gridContainer.appendChild(nodeElement);
 
