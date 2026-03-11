@@ -12,10 +12,11 @@ let END_NODE = { row: 5, col: 8 };
 // ------------------------ Generowanie siatki ----------------------
 function createGrid() {
     // Pobranie aktualnych wartości
+
     let ROWS=1;
     let COLS=1;
+    
     // Zabezpieczenia
-
     if (parseInt(rowInput.value) <2 ) {
         ROWS = 2;
     }  
@@ -33,6 +34,11 @@ function createGrid() {
     gridContainer.innerHTML = '';
     gridLogic = [];
 
+    // Zabezpieczenia 2
+    START_NODE.row = Math.min(START_NODE.row, ROWS - 1);
+    START_NODE.col = Math.min(START_NODE.col, COLS - 1);
+    END_NODE.row = Math.min(END_NODE.row, ROWS - 1);
+    END_NODE.col = Math.min(END_NODE.col, COLS - 1);
     
 
     // Ustawienie liczby kolumn w CSS Grid
@@ -43,7 +49,12 @@ function createGrid() {
         for (let c = 0; c < COLS; c++) {
             const nodeElement = document.createElement('div');
             nodeElement.classList.add('node');
-            
+            // Nadawanie klas dla węzła startowego i końcowego
+            if (r === START_NODE.row && c === START_NODE.col) {
+                nodeElement.classList.add('start');
+            } else if (r === END_NODE.row && c === END_NODE.col) {
+                nodeElement.classList.add('end');
+            }
             
 
             gridContainer.appendChild(nodeElement);
