@@ -35,11 +35,20 @@ function createGrid() {
     gridLogic = [];
 
     // Zabezpieczenia 2
-    START_NODE.row = Math.min(START_NODE.row, ROWS - 1);
-    START_NODE.col = Math.min(START_NODE.col, COLS - 1);
-    END_NODE.row = Math.min(END_NODE.row, ROWS - 1);
-    END_NODE.col = Math.min(END_NODE.col, COLS - 1);
+    START_NODE.row = parseInt(document.getElementById('startrow').value);
+    START_NODE.col = parseInt(document.getElementById('startcol').value);
+    END_NODE.row = parseInt(document.getElementById('endrow').value);
+    END_NODE.col = parseInt(document.getElementById('endcol').value);
+
+    START_NODE.row = Math.max(0, Math.min(START_NODE.row, ROWS - 1));
+    START_NODE.col = Math.max(0, Math.min(START_NODE.col, COLS - 1));
     
+    END_NODE.row = Math.max(0, Math.min(END_NODE.row, ROWS - 1));
+    END_NODE.col = Math.max(0, Math.min(END_NODE.col, COLS - 1));
+
+    // if (){
+        
+    // }
 
     // Ustawienie liczby kolumn w CSS Grid
     gridContainer.style.gridTemplateColumns = `repeat(${COLS}, 25px)`;
