@@ -1,6 +1,6 @@
 // --- 1. Konfiguracja siatki ---
-const ROWS = 20;
-const COLS = 40;
+const ROWS = document.getElementById('row');
+const COLS = document.getElementById('col');
 const gridContainer = document.getElementById('grid-container');
 
 // Dwuwymiarowa tablica do przechowywania logiki (dla algorytmu)
