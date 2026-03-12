@@ -9,6 +9,14 @@ let gridLogic = [];
 let START_NODE = { row: 5, col: 2 };
 let END_NODE = { row: 5, col: 8 };
 
+// Dla kontrolu stanu algorytmu i animacji
+let animationTimer = null;
+let isPaused = false;
+let currentStep = 0;
+let isDrawingPath = false;
+let savedVisitedNodes = [];
+let savedPathNodes = [];
+
 // ------------------------ Generowanie siatki ----------------------
 function createGrid() {
     // Pobranie aktualnych wartości
@@ -215,7 +223,7 @@ function animatePath(nodesInShortestPathOrder) {
     }
 }
 
-// Funkcja pomocnicza do czyszczenia śladów po poprzednim wyszukiwaniu
+// Funkcja do czyszczenia śladów po poprzednim wyszukiwaniu
 function clearPathsAndVisited() {
     for (let row of gridLogic) {
         for (let node of row) {
@@ -225,6 +233,57 @@ function clearPathsAndVisited() {
     }
 }
 
+// ++++++++++++++++++++++++++++++++++ Generate walls ++++++++++++++++++++++++++++++++++
+
+// ++++++++++++++++++++++++++++++++++ Stop/Resume ++++++++++++++++++++++++++++++++++
+
+function animateDijkstraStep() {
+    // Jeśli kliknięto pauzę, przerywamy pętlę
+    if (isPaused) return;
+
+    // Predkosc dynamiczna
+    const speedVal = parseInt(document.getElementById('speed').value);
+    const delay = 501 - speedVal; 
+
+    // Rysowanie odwiedzonych węzłów (niebieski front)
+    if (!isDrawingPath) {
+        if (currentStep < savedVisitedNodes.length) {
+            const node = savedVisitedNodes[currentStep];
+            
+            // Pomijamy kolorowanie startu i endu
+            if (!(node.row === START_NODE.row && node.col === START_NODE.col) &&
+                !(node.row === END_NODE.row && node.col === END_NODE.col)) {
+                node.element.classList.add('visited');
+            }
+            
+            currentStep++;
+            animationTimer = setTimeout(animateDijkstraStep, delay); // Planowanie kroku
+        } else {
+            isDrawingPath = true;
+            currentStep = 0; // Resetujemy licznik dla ścieżki
+            animationTimer = setTimeout(animateDijkstraStep, delay);
+        }
+    } 
+    // Rysowanie ostatecznej ścieżki
+    else {
+        if (currentStep < savedPathNodes.length) {
+            const node = savedPathNodes[currentStep];
+            
+            if (!(node.row === START_NODE.row && node.col === START_NODE.col) &&
+                !(node.row === END_NODE.row && node.col === END_NODE.col)) {
+                node.element.classList.add('path');
+            }
+            
+            currentStep++;
+            animationTimer = setTimeout(animateDijkstraStep, 50); // Ścieżka rysuje się ze stałą prędkością
+        } else {
+            // Cała animacja zakończona
+            document.getElementById('stop').innerText = "Stop";
+        }
+    }
+}
+
+// ======================================== Poczatek programu + przyciski ========================================
 createGrid();
 
 // Buttons 
@@ -233,12 +292,44 @@ document.getElementById("generate").addEventListener("click", function () {
   createGrid();
 });
 
+// Start
+
 document.getElementById('start').addEventListener('click', () => {
+    clearTimeout(animationTimer);
+    isPaused = false;
+    currentStep = 0;
+    isDrawingPath = false;
+    document.getElementById('stop').innerText = "Stop";
+
+    // Czyścimy siatke ale zostawiamy ściany
     clearPathsAndVisited();
 
-    const visitedNodesInOrder = dijkstra(gridLogic, START_NODE, END_NODE);
+    // Obliczamy Dijkstrę w ułamku sekundy
+    savedVisitedNodes = dijkstra(gridLogic, START_NODE, END_NODE);
     const endNode = gridLogic[END_NODE.row][END_NODE.col];
-    const nodesInShortestPathOrder = getNodesInShortestPathOrder(endNode);
+    savedPathNodes = getNodesInShortestPathOrder(endNode);
     
-    animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    // Uruchamiamy animację krok po kroku
+    animateDijkstraStep();
+});
+
+// Stop
+
+document.getElementById('stop').addEventListener('click', () => {
+    const stopBtn = document.getElementById('stop');
+    
+    // Zabezpieczenie: jeśli nie ma nic do animowania, nic nie rób
+    if (savedVisitedNodes.length === 0) return; 
+
+    if (isPaused) {
+        // Wznawianie
+        isPaused = false;
+        stopBtn.innerText = "Stop";
+        animateDijkstraStep();      // Odpalamy pętlę z powrotem
+    } else {
+        // Pauzowanie
+        isPaused = true;
+        clearTimeout(animationTimer);
+        stopBtn.innerText = "Resume"; // Zmiana napisu na przycisku
+    }
 });
