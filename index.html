@@ -18,7 +18,7 @@
     <button id="ramdomize" >Ramdomize walls</button>
     </div>
   <table>
-
+    <!-- Start + End-->
     <div class="controls">
     <label>StartRow: <input id="startrow" type="number" value="5" min="1" max="50"></label>
     <label>StartCol: <input id="startcol" type="number" value="2" min="1" max="50"></label>
@@ -28,12 +28,20 @@
     <label>EndCol: <input id="endcol" type="number" value="8" min="1" max="50"></label>
     </div>
 
+    <!-- Speed --> <!-- Density-->
   <div class="slidecontainer">
+  <table>
     <tr>
-    <th>Speed: <output id="speedVal" type="number" value="0" min="1"></output></th>
-    <th><input type="range" min="1" max="500" value="100" class="slider" id="speed"></th>
+      <th>Speed: <output id="speedVal" type="number" value="0" min="1"></output></th>
+      <th><input type="range" min="1" max="500" value="100" class="slider" id="speed"></th>
     </tr>
   </table>
+  <table>
+      <tr>
+        <th>Density:</th>
+        <th><input type="range" min="0" max="100" value="30" class="slider" id="density"></th>
+      </tr>
+    </table>
   </div>
 
   <div class="controls">

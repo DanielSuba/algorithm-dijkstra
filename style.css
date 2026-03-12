@@ -45,8 +45,9 @@ button{
 
 .slidecontainer {
   width: 100%;
-  margin-bottom:16px;
+  margin-bottom:8px;
   font-style: normal;
+  margin-top:8px;
 }
 
 .slider {

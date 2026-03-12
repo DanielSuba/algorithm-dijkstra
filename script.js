@@ -235,6 +235,31 @@ function clearPathsAndVisited() {
 
 // ++++++++++++++++++++++++++++++++++ Generate walls ++++++++++++++++++++++++++++++++++
 
+function ramdomizewalls(densityVal) {
+    for (let r = 0; r < gridLogic.length; r++) {
+        for (let c = 0; c < gridLogic[r].length; c++) {
+            const node = gridLogic[r][c];
+
+            // Zabezpieczenie nie zamazujemy punktu Start i Endu
+            if ((r === START_NODE.row && c === START_NODE.col) || 
+                (r === END_NODE.row && c === END_NODE.col)) {
+                continue;
+            }
+
+            if (Math.random() * 100 < densityVal) {
+                // Stawiamy ścianę
+                node.isWall = true;
+                node.element.classList.add('wall');
+            } else {
+                // Usuwamy ścianę (na wypadek, gdyby jakaś już tu stała)
+                node.isWall = false;
+                node.element.classList.remove('wall');
+            }
+        }
+    }
+}
+
+
 // ++++++++++++++++++++++++++++++++++ Stop/Resume ++++++++++++++++++++++++++++++++++
 
 function animateDijkstraStep() {
@@ -334,6 +359,21 @@ document.getElementById('stop').addEventListener('click', () => {
     }
 });
 
+// Ramdomize
+
+document.getElementById('ramdomize').addEventListener('click', () => {
+    // Pobieramy wartość gęstości z suwaka Denstity
+    const denVal = parseInt(document.getElementById('density').value);
+
+    // Zatrzymujemy trwającą animację 
+    clearTimeout(animationTimer);
+    isPaused = false;
+    document.getElementById('stop').innerText = "Stop";
+    clearPathsAndVisited();
+
+    ramdomizewalls(denVal);
+});
+
 // Reset
 
 document.getElementById('reset').addEventListener('click', () => {
@@ -347,6 +387,6 @@ document.getElementById('reset').addEventListener('click', () => {
     
     document.getElementById('stop').innerText = "Stop";
     
-    // Funkcja czyszcząca kolory - usunie tylko klasy 'visited' i 'path'
+    // Funkcja czyszcząca kolory
     clearPathsAndVisited(); 
 });
