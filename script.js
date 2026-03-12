@@ -304,7 +304,7 @@ document.getElementById('start').addEventListener('click', () => {
     // Czyścimy siatke ale zostawiamy ściany
     clearPathsAndVisited();
 
-    // Obliczamy Dijkstrę w ułamku sekundy
+    // Obliczamy Dijkstrę 
     savedVisitedNodes = dijkstra(gridLogic, START_NODE, END_NODE);
     const endNode = gridLogic[END_NODE.row][END_NODE.col];
     savedPathNodes = getNodesInShortestPathOrder(endNode);
@@ -332,4 +332,21 @@ document.getElementById('stop').addEventListener('click', () => {
         clearTimeout(animationTimer);
         stopBtn.innerText = "Resume"; // Zmiana napisu na przycisku
     }
+});
+
+// Reset
+
+document.getElementById('reset').addEventListener('click', () => {
+    // Zatrzymujemy całkowicie animację
+    clearTimeout(animationTimer);
+    isPaused = false;
+    currentStep = 0;
+    isDrawingPath = false;
+    savedVisitedNodes = [];
+    savedPathNodes = [];
+    
+    document.getElementById('stop').innerText = "Stop";
+    
+    // Funkcja czyszcząca kolory - usunie tylko klasy 'visited' i 'path'
+    clearPathsAndVisited(); 
 });
