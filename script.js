@@ -8,6 +8,8 @@ let gridLogic = [];
 // Pozycje startowa i końcowe 
 let START_NODE = { row: 5, col: 2 };
 let END_NODE = { row: 5, col: 8 };
+let placingStartMode = false;
+let placingEndMode = false;
 
 // Dla kontrolu stanu algorytmu i animacji
 let animationTimer = null;
@@ -78,7 +80,49 @@ function createGrid() {
             
             // Obsługa kliknięcia dla ścian
             nodeElement.addEventListener('click', () => {
-                // Zabezpieczenia 3
+                
+                // Tryb ustawiania punktu STARTOWEGO
+                if (placingStartMode) {
+                    // Usuwamy klasę start ze starego elementu
+                    gridLogic[START_NODE.row][START_NODE.col].element.classList.remove('start');
+                    
+                    // Aktualizujemy zmienne globalne
+                    START_NODE.row = r;
+                    START_NODE.col = c;
+                    document.getElementById('startrow').value = r;
+                    document.getElementById('startcol').value = c;
+                    
+                    // Usuwamy klase ścianę
+                    nodeElement.classList.remove('wall');
+                    gridLogic[r][c].isWall = false;
+                    nodeElement.classList.add('start');
+                    
+                    // Wyłączamy tryb
+                    placingStartMode = false;
+                    document.getElementById('placeStartBtn').innerText = "Place Start";
+                    return;
+                }
+                
+                // Tryb ustawiania punktu KOŃCOWEGO
+                if (placingEndMode) {
+                    gridLogic[END_NODE.row][END_NODE.col].element.classList.remove('end');
+                    
+                    END_NODE.row = r;
+                    END_NODE.col = c;
+                    
+                    document.getElementById('endrow').value = r;
+                    document.getElementById('endcol').value = c;
+                    
+                    nodeElement.classList.remove('wall');
+                    gridLogic[r][c].isWall = false;
+                    nodeElement.classList.add('end');
+                    
+                    placingEndMode = false;
+                    document.getElementById('placeEndBtn').innerText = "Place End";
+                    return;
+                }
+
+                // Zabezpieczenia: nie pozwalamy postawić ściany na Starcie i koncu
                 if ((r === START_NODE.row && c === START_NODE.col) || 
                     (r === END_NODE.row && c === END_NODE.col)) return;
 
@@ -383,4 +427,21 @@ document.getElementById('changeMode').addEventListener('click', (e) => {
             }
         }
     }
+});
+
+const placeStartBtn = document.getElementById('placeStartBtn');
+const placeEndBtn = document.getElementById('placeEndBtn');
+
+placeStartBtn.addEventListener('click', () => {
+    placingStartMode = true;
+    placingEndMode = false;
+    placeStartBtn.innerText = "Place Start (Active)";
+    placeEndBtn.innerText = "Place End";
+});
+
+placeEndBtn.addEventListener('click', () => {
+    placingEndMode = true;
+    placingStartMode = false;
+    placeEndBtn.innerText = "Place End (Active)";
+    placeStartBtn.innerText = "Place Start";
 });
