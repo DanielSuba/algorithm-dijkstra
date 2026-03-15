@@ -86,7 +86,17 @@ button{
     background-color: rgb(255, 255, 255);
     cursor: pointer;
     transition: background-color 0.2s ease;
+
+    /* Wagi */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    font-weight: bold;
+    color: #333;
+    user-select: none;
 }
+
 
 /* Inne */
 .node.wall { background-color: #1a3652; }

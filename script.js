@@ -17,6 +17,9 @@ let isDrawingPath = false;
 let savedVisitedNodes = [];
 let savedPathNodes = [];
 
+// Wagi
+let showWeights = false;
+
 // ------------------------ Generowanie siatki ----------------------
 function createGrid() {
     // Pobranie aktualnych wartości
@@ -129,14 +132,14 @@ function dijkstra(grid, startNodeCoords, endNodeCoords) {
         // Jeśli trafiliśmy na ścianę, omijamy ją
         if (closestNode.isWall) continue;
 
-        // Jeśli zostaliśmy zamknięci w ścianach i nie ma drogi do mety
+        // Jeśli zostaliśmy zamknięci w ścianach i nie ma drogi do endu
         if (closestNode.distance === Infinity) return visitedNodesInOrder;
 
         // Oznaczamy jako odwiedzony
         closestNode.isVisited = true;
         visitedNodesInOrder.push(closestNode);
 
-        // Jeśli dotarliśmy do mety, kończymy szukanie
+        // Jeśli dotarliśmy do endu, kończymy szukanie
         if (closestNode === endNode) return visitedNodesInOrder;
 
         // Aktualizujemy sąsiadów
@@ -181,54 +184,14 @@ function getNodesInShortestPathOrder(finishNode) {
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!! ANIMACJA !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-function animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
-    // Odczyt prędkości z suwaka. 
-    // Suwak ma max 500.
-    const speedVal = parseInt(document.getElementById('speed').value);
-    const delay = 501 - speedVal;
-
-    for (let i = 0; i <= visitedNodesInOrder.length; i++) {
-        // Gdy animacja przeszukiwania dobiegnie końca, animujemy ścieżkę główną
-        if (i === visitedNodesInOrder.length) {
-            setTimeout(() => {
-                animatePath(nodesInShortestPathOrder);
-            }, delay * i);
-            return;
-        }
-
-        // Animacja pojedynczej komórki
-        setTimeout(() => {
-            const node = visitedNodesInOrder[i];
-            // Zabezpieczenie startu i koncu
-            if (!(node.row === START_NODE.row && node.col === START_NODE.col) &&
-                !(node.row === END_NODE.row && node.col === END_NODE.col)) {
-                
-                node.element.classList.add('visited');
-            }
-        }, delay * i);
-    }
-}
-
-function animatePath(nodesInShortestPathOrder) {
-    const pathDelay = 50; // Prędkość rysowania 
-    for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
-        setTimeout(() => {
-            const node = nodesInShortestPathOrder[i];
-            if (!(node.row === START_NODE.row && node.col === START_NODE.col) &&
-                !(node.row === END_NODE.row && node.col === END_NODE.col)) {
-                
-                node.element.classList.add('path');
-            }
-        }, pathDelay * i);
-    }
-}
-
 // Funkcja do czyszczenia śladów po poprzednim wyszukiwaniu
 function clearPathsAndVisited() {
     for (let row of gridLogic) {
         for (let node of row) {
             node.element.classList.remove('visited');
             node.element.classList.remove('path');
+            // Czysci wagi
+            node.element.innerText = '';
         }
     }
 }
@@ -263,14 +226,14 @@ function ramdomizewalls(densityVal) {
 // ++++++++++++++++++++++++++++++++++ Stop/Resume ++++++++++++++++++++++++++++++++++
 
 function animateDijkstraStep() {
-    // Jeśli kliknięto pauzę, przerywamy pętlę
+    // Pauza
     if (isPaused) return;
 
     // Predkosc dynamiczna
     const speedVal = parseInt(document.getElementById('speed').value);
     const delay = 501 - speedVal; 
 
-    // Rysowanie odwiedzonych węzłów (niebieski front)
+    // Rysowanie odwiedzonych węzłów na niebiesko
     if (!isDrawingPath) {
         if (currentStep < savedVisitedNodes.length) {
             const node = savedVisitedNodes[currentStep];
@@ -286,10 +249,10 @@ function animateDijkstraStep() {
         } else {
             isDrawingPath = true;
             currentStep = 0; // Resetujemy licznik dla ścieżki
-            animationTimer = setTimeout(animateDijkstraStep, delay);
+            animationTimer = setTimeout(animateDijkstraStep, delay); // Planowanie kroku
         }
     } 
-    // Rysowanie ostatecznej ścieżki
+    // Rysowanie ostatecznej ścieżki na zolto
     else {
         if (currentStep < savedPathNodes.length) {
             const node = savedPathNodes[currentStep];
@@ -389,4 +352,35 @@ document.getElementById('reset').addEventListener('click', () => {
     
     // Funkcja czyszcząca kolory
     clearPathsAndVisited(); 
+});
+
+// TRYB WYSWIETLANIA WAG
+
+document.getElementById('changeMode').addEventListener('click', (e) => {
+    showWeights = !showWeights; // Przełączamy stan
+    
+    // Zmiana tekstu na przycisku
+    e.target.innerText = showWeights ? "Show Weights: ON" : "Show Weights: OFF";
+
+    // Pokazuje wagi
+    for (let r = 0; r < gridLogic.length; r++) {
+        for (let c = 0; c < gridLogic[r].length; c++) {
+            const node = gridLogic[r][c];
+            
+            // Pomijamy Start i koniec
+            if ((node.row === START_NODE.row && node.col === START_NODE.col) || 
+                (node.row === END_NODE.row && node.col === END_NODE.col)) {
+                continue;
+            }
+
+            if (showWeights) {
+                // Pokazujemy wagi tylko tam, gdzie algorytm już dotarł
+                if (node.isVisited && node.distance > 0 && node.distance !== Infinity) {
+                    node.element.innerText = node.distance;
+                }
+            } else {
+                node.element.innerText = '';
+            }
+        }
+    }
 });
