@@ -97,7 +97,7 @@ button{
     user-select: none;
 }
 
-
+/* Standart */
 /* Inne */
 .node.wall { background-color: #1a3652; }
 .node.start { background-color: #55daa7; }
