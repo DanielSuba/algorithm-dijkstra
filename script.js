@@ -60,7 +60,6 @@ function createGrid() {
     END_NODE.col = Math.max(0, Math.min(END_NODE.col, COLS - 1));
 
     // Ustawienie liczby kolumn w CSS Grid
-    // Bierzy jako probę kolumny i podaje odleglosc
     gridContainer.style.gridTemplateColumns = `repeat(${COLS}, 25px)`;
 
     // Rysowanie siatki
@@ -495,4 +494,3 @@ document.getElementById('themeSelect').addEventListener('change', (e) => {
         document.body.classList.remove('dark-theme');
     }
 });
-
