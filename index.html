@@ -7,9 +7,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="titles">
-    <h2>Wizualizacja Algorytmu Dijkstra</h2>
-    </div>
+    <header class="top-bar">
+        <div class="logo-area">
+            <img src="Logo-uwb.png" alt="Logo" class="logo-img">
+        </div>
+        <div class="titles">
+            <h2>Wizualizacja Algorytmu Dijkstra</h2>
+        </div>
+        <div class="header-spacer"></div> 
+    </header>
+
+    <div class="main-content">
     <!-- Sterowniki 1-->
     <div class="controls">
     <label>Height: <input id="row" type="number" value="10" min="1" max="50"></label>
@@ -57,7 +65,7 @@
 
     </div>
     <div id="grid-container"></div>
-
+  </div>
     <script src="script.js"></script>
 </body>
 </html>
