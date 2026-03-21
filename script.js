@@ -59,13 +59,11 @@ function createGrid() {
     END_NODE.row = Math.max(0, Math.min(END_NODE.row, ROWS - 1));
     END_NODE.col = Math.max(0, Math.min(END_NODE.col, COLS - 1));
 
-    // if (){
-        
-    // }
-
     // Ustawienie liczby kolumn w CSS Grid
+    // Bierzy jako probę kolumny i podaje odleglosc
     gridContainer.style.gridTemplateColumns = `repeat(${COLS}, 25px)`;
 
+    // Rysowanie siatki
     for (let r = 0; r < ROWS; r++) {
         let currentRow = [];
         for (let c = 0; c < COLS; c++) {
@@ -126,6 +124,7 @@ function createGrid() {
                 if ((r === START_NODE.row && c === START_NODE.col) || 
                     (r === END_NODE.row && c === END_NODE.col)) return;
 
+                // Scianki
                 nodeElement.classList.toggle('wall');
                 gridLogic[r][c].isWall = !gridLogic[r][c].isWall; // Aktualizacja logiki
             });
@@ -236,6 +235,9 @@ function clearPathsAndVisited() {
             node.element.classList.remove('path');
             // Czysci wagi
             node.element.innerText = '';
+            // Czysci gradient
+            node.element.style.backgroundColor = '';
+            node.element.style.color = '';
         }
     }
 }
@@ -267,7 +269,7 @@ function ramdomizewalls(densityVal) {
 }
 
 
-// ++++++++++++++++++++++++++++++++++ Stop/Resume ++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++ Animacja ++++++++++++++++++++++++++++++++++
 
 function animateDijkstraStep() {
     // Pauza
@@ -286,6 +288,38 @@ function animateDijkstraStep() {
             if (!(node.row === START_NODE.row && node.col === START_NODE.col) &&
                 !(node.row === END_NODE.row && node.col === END_NODE.col)) {
                 node.element.classList.add('visited');
+                
+                // --- NOWE: Odczyt koloru z HTML ---
+                const colorMode = document.getElementById('visitedColor').value;
+                
+                if (colorMode === 'gradientV1') {
+                    const hue = (210 + (node.distance * 5)) % 360; 
+                    node.element.style.backgroundColor = `hsl(${hue}, 80%, 65%)`;
+                    node.element.style.color = '#000';
+                } 
+                else if (colorMode === 'gradientV2') {
+                    const hue = ((node.row * 10) + (node.col * 10)) % 360;
+                    node.element.style.backgroundColor = `hsl(${hue}, 80%, 65%)`;
+                    node.element.style.color = '#000';
+                } 
+                else if (colorMode === 'blue') {
+                    node.element.style.backgroundColor = '#6b9fe4'; 
+                    node.element.style.color = '#000';
+                } 
+                else if (colorMode === 'black') {
+                    node.element.style.backgroundColor = '#222222'; 
+                    node.element.style.color = '#ffffff'; 
+                } 
+                else if (colorMode === 'random') {
+                    const randomColor = Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+                    node.element.style.backgroundColor = `#${randomColor}`;
+                    node.element.style.color = '#000';
+                }
+
+                // Obsługa wyświetlania wag w trakcie animacji
+                if (showWeights && node.distance > 0 && node.distance !== Infinity) {
+                    node.element.innerText = node.distance;
+                }
             }
             
             currentStep++;
@@ -304,6 +338,9 @@ function animateDijkstraStep() {
             if (!(node.row === START_NODE.row && node.col === START_NODE.col) &&
                 !(node.row === END_NODE.row && node.col === END_NODE.col)) {
                 node.element.classList.add('path');
+                // Gradient usuniecie
+                node.element.style.backgroundColor = '';
+                node.element.style.color = '';
             }
             
             currentStep++;
@@ -432,6 +469,8 @@ document.getElementById('changeMode').addEventListener('click', (e) => {
 const placeStartBtn = document.getElementById('placeStartBtn');
 const placeEndBtn = document.getElementById('placeEndBtn');
 
+// Start + End
+
 placeStartBtn.addEventListener('click', () => {
     placingStartMode = true;
     placingEndMode = false;
@@ -445,3 +484,14 @@ placeEndBtn.addEventListener('click', () => {
     placeEndBtn.innerText = "Place End (Active)";
     placeStartBtn.innerText = "Place Start";
 });
+
+// Temy
+
+document.getElementById('themeSelect').addEventListener('change', (e) => {
+    if (e.target.value === 'dark') {
+        document.body.classList.add('dark-theme');
+    } else {
+        document.body.classList.remove('dark-theme');
+    }
+});
+

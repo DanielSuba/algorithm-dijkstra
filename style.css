@@ -1,23 +1,75 @@
+/* --- Temy dla strony --- */
+:root {
+    --bg-color: #e0d7ff;
+    --bg-color2: #744eff;
+    --top-bar-bg: #cbb5ff;
+    --text-color: #000000;
+    --node-bg: #ffffff;
+    --node-hover: #cfcfcf;
+    --grid-line: #ccc;
+    --grid-border: #333;
+    --wall-bg: #1a3652;
+    --wall-hover: #274f77;
+    --btn-bg: #744eff;
+    --btn-text: #ffffff;
+    --btn-hover: #5f32ff;
+    --slider-bg: linear-gradient(90deg, #744eff, #a94eff, #744eff);
+    --slider-sbg: #000000;
+}
+
+body.dark-theme {
+    --bg-color: #121212;
+    --bg-color2: #2c2c2c;
+    --top-bar-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --node-bg: #2c2c2c;
+    --node-hover: #4a4a4a;
+    --grid-line: #444444;
+    --grid-border: #000000;
+    --wall-bg: #6272a4;
+    --wall-hover: #8be9fd;
+    --btn-bg: #bd93f9;
+    --btn-text: #000000;
+    --btn-hover: #ff79c6;
+    --slider-bg: linear-gradient(90deg, #bd93f9, #ff79c6, #bd93f9);
+    --slider-sbg: #ffffff;
+}
+
 body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
     display: flex;
     flex-direction: column;
     align-items: center;
     font-family: sans-serif;
-    background-color: #e0d7ff;
     margin: 0;
     padding: 0;
+    transition: background-color 0.3s, color 0.3s; /* Płynne przejście temy */
 }
 
-/* Gorny pasek */
+/* Gorny pasek + kolory dla temy */
 .top-bar {
+    background-color: var(--top-bar-bg);
     width: 100%;
-    background-color: #cbb5ff; 
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 10px 20px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     box-sizing: border-box;
+    transition: background-color 0.3s;
+}
+
+.top-bar .titles { 
+    color: var(--text-color); 
+    flex: 1;
+    text-align: center;
+    margin: 0;
+}
+
+.top-bar .titles h2 {
+    margin: 0;
+    font-size: 1.5rem;
 }
 
 .logo-area {
@@ -33,24 +85,27 @@ body {
     display: block;
 }
 
-.top-bar .titles {
-    flex: 1;
-    text-align: center;
-    color: rgb(0, 0, 0);
-    margin: 0;
-}
-
-.top-bar .titles h2 {
-    margin: 0;
-    font-size: 1.5rem;
-}
-
-.header-spacer {
+/* Kontener na przycisk wyboru motywu */
+.theme-switch-area {
     flex: 0 0 100px;
+    display: flex;
+    justify-content: flex-end;
 }
 
-.titles{
-    color:rgb(0, 0, 0);
+/* Wygląd */
+.theme-select {
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.titles {
+    color: var(--text-color);
 }
 
 /* Sterowniki */
@@ -63,79 +118,88 @@ body {
     box-sizing: border-box;
 }
 
-.controls{
-  display:flex;
-  gap:5px;
-  align-items:center;
-  margin-top: 8px;
-  margin-bottom:20px;
-  flex-wrap:wrap;
-  color:rgb(0, 0, 0);
+.controls {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    margin-top: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    color: var(--text-color);
 }
 
-input[type="number"]{
-  width:80px;
-  padding:6px 8px;
-  border-radius:6px;
-  border:1px solid #ccc;
+input[type="number"] {
+    width: 80px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--grid-line);
+    background-color: var(--node-bg);
+    color: var(--text-color);
 }
 
-button{
-  padding:8px 12px;
-  border-radius:8px;
-  border: none;
-  background:#744eff;
-  color:rgb(255, 255, 255);
-  cursor:pointer;
-  margin: 10px;
-}
-.button{
-  color:rgb(255, 255, 255);
+button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
-/* Sterowniki */
+.button {
+    color: var(--btn-text);
+}
+
+button:hover, .button:hover { 
+    background: var(--btn-hover);
+    transform: scale(1.1);
+}
 
 /* Suwak */
-
 .slidecontainer {
-  width: 100%;
-  margin-bottom:8px;
-  font-style: normal;
-  margin-top:8px;
+    width: 100%;
+    margin-bottom: 8px;
+    font-style: normal;
+    margin-top: 8px;
 }
 
 .slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 10px;
-  background: linear-gradient(90deg, #744eff,#a94eff, #744eff );
-  outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 10px;
+    background: var(--slider-bg);
+    outline: none;
+    border-radius: 5px;
 }
+
 .slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 10px;
-  height: 13px;
-  background: #000000;
-  cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 13px;
+    background: var(--slider-sbg);
+    cursor: pointer;
+    border-radius: 3px;
 }
 
 /* Siatka */
 #grid-container {
     display: grid;
     gap: 1px;
-    background-color: #ccc; 
-    border: 2px solid #333;
+    background-color: var(--grid-line); 
+    border: 2px solid var(--grid-border);
 }
 
 /* Komórka */
 .node {
     width: 25px;
     height: 25px;
-    background-color: rgb(255, 255, 255);
+    background-color: var(--node-bg);
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 
     /* Wagi */
     display: flex;
@@ -143,55 +207,55 @@ button{
     align-items: center;
     font-size: 10px;
     font-weight: bold;
-    color: #333;
+    color: var(--text-color);
     user-select: none;
 }
 
-/* Standart */
-/* Inne */
-.node.wall { background-color: #1a3652; }
+/* Kolory komórek */
+.node.wall { background-color: var(--wall-bg); }
 .node.start { background-color: #55daa7; }
 .node.end { background-color: #e64b79; }
+
 .node.visited { 
-  background-color: #6b9fe4;
-  animation: upin 0.5s ease-out forwards;
+    background-color: #6b9fe4;
+    animation: upin 0.5s ease-out forwards;
+    color: #000000; 
 }
 .node.path { 
-  background-color: #ecd163;
-  animation: upinend 1s ease-out forwards;
+    background-color: #ecd163;
+    animation: upinend 1s ease-out forwards;
+    color: #000000;
 }
 
-/* Mouse effects */
+/* Efekty myszy */
 .node:hover { 
-  background-color: #cfcfcf;
-  transform: scale(1.2);
+    background-color: var(--node-hover);
+    transform: scale(1.2);
+    z-index: 10; /* Zapobiega obcinaniu animacji przy powiększeniu */
+    position: relative;
 }
-.node.wall:hover { background-color: #274f77; }
+.node.wall:hover { background-color: var(--wall-hover); }
 .node.start:hover { background-color: #23a56f; }
 .node.end:hover { background-color: #da2f62; }
 .node.visited:hover { background-color: #4f75a7; }
 .node.path:hover { background-color: #bda752; }
-.button:hover { 
-  background:#5f32ff;
-  transform: scale(1.2);
-}
 
 /* Animation */
 @keyframes upinend {
-  0% { transform: translateY(0); }
-  20% { transform: translateY(-10px); }
-  70% { transform: translateY(-5px); }
-  100% { transform: translateY(0); }
+    0% { transform: translateY(0); }
+    20% { transform: translateY(-10px); }
+    70% { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
 }
 
 @keyframes upin {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-  100% { transform: translateY(0); }
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
 }
 
 @keyframes hovermouse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
 }
