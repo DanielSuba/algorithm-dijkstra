@@ -169,7 +169,7 @@ function dijkstra(grid, startNodeCoords, endNodeCoords) {
         // Sortujemy węzły po najkrótszym dystansie
         unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
         
-        // Pobieramy węzeł z najmniejszym dystansem
+        // Pobieramy węzeł z najmniejszym dystansem (shift() pobiera najblizszy wezel)
         const closestNode = unvisitedNodes.shift();
 
         // Jeśli trafiliśmy na ścianę, omijamy ją
@@ -287,9 +287,10 @@ function animateDijkstraStep() {
             // Pomijamy kolorowanie startu i endu
             if (!(node.row === START_NODE.row && node.col === START_NODE.col) &&
                 !(node.row === END_NODE.row && node.col === END_NODE.col)) {
+                // Koloruje
                 node.element.classList.add('visited');
                 
-                // --- NOWE: Odczyt koloru z HTML ---
+                // Odczyt koloru z HTML
                 const colorMode = document.getElementById('visitedColor').value;
                 
                 if (colorMode === 'gradientV1') {
