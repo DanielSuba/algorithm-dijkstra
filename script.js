@@ -10,6 +10,10 @@ let START_NODE = { row: 5, col: 2 };
 let END_NODE = { row: 5, col: 8 };
 let placingStartMode = false;
 let placingEndMode = false;
+// Przyciska dla Startu/koncu
+const placeStartBtn = document.getElementById('placeStartBtn');
+const placeEndBtn = document.getElementById('placeEndBtn');
+
 
 // Dla kontrolu stanu algorytmu i animacji
 let animationTimer = null;
@@ -285,14 +289,15 @@ function animateDijkstraStep() {
             const node = savedVisitedNodes[currentStep];
             
             // Pomijamy kolorowanie startu i endu
-            if (!(node.row === START_NODE.row && node.col === START_NODE.col) &&
-                !(node.row === END_NODE.row && node.col === END_NODE.col)) {
-                // Koloruje
+            if (!(node.row === START_NODE.row && node.col === START_NODE.col) && 
+            !(node.row === END_NODE.row && node.col === END_NODE.col)) {
+                // Koloruje (Dodaje klasa)
                 node.element.classList.add('visited');
                 
                 // Odczyt koloru z HTML
                 const colorMode = document.getElementById('visitedColor').value;
-                
+                 
+                // Koloruje nowa wersja z colorMode
                 if (colorMode === 'gradientV1') {
                     const hue = (210 + (node.distance * 5)) % 360; 
                     node.element.style.backgroundColor = `hsl(${hue}, 80%, 65%)`;
@@ -325,7 +330,8 @@ function animateDijkstraStep() {
             
             currentStep++;
             animationTimer = setTimeout(animateDijkstraStep, delay); // Planowanie kroku
-        } else {
+        } 
+        else {
             isDrawingPath = true;
             currentStep = 0; // Resetujemy licznik dla ścieżki
             animationTimer = setTimeout(animateDijkstraStep, delay); // Planowanie kroku
@@ -335,9 +341,9 @@ function animateDijkstraStep() {
     else {
         if (currentStep < savedPathNodes.length) {
             const node = savedPathNodes[currentStep];
-            
-            if (!(node.row === START_NODE.row && node.col === START_NODE.col) &&
-                !(node.row === END_NODE.row && node.col === END_NODE.col)) {
+            // Jezeli nie start/koniec wtedy zamalowuje
+            if (!(node.row === START_NODE.row && node.col === START_NODE.col) && 
+            !(node.row === END_NODE.row && node.col === END_NODE.col)) {
                 node.element.classList.add('path');
                 // Gradient usuniecie
                 node.element.style.backgroundColor = '';
@@ -345,8 +351,9 @@ function animateDijkstraStep() {
             }
             
             currentStep++;
-            animationTimer = setTimeout(animateDijkstraStep, 50); // Ścieżka rysuje się ze stałą prędkością
-        } else {
+            animationTimer = setTimeout(animateDijkstraStep, 40); // Ścieżka rysuje się ze stałą prędkością
+        } 
+        else {
             // Cała animacja zakończona
             document.getElementById('stop').innerText = "Stop";
         }
@@ -469,9 +476,6 @@ document.getElementById('changeMode').addEventListener('click', (e) => {
     }
 });
 
-const placeStartBtn = document.getElementById('placeStartBtn');
-const placeEndBtn = document.getElementById('placeEndBtn');
-
 // Start + End
 // Ustawienie Startu
 placeStartBtn.addEventListener('click', () => {
@@ -490,7 +494,6 @@ placeEndBtn.addEventListener('click', () => {
 });
 
 // Temy Standart+Dark
-
 document.getElementById('themeSelect').addEventListener('change', (e) => {
     if (e.target.value === 'dark') {
         document.body.classList.add('dark-theme');
