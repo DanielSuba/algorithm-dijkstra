@@ -138,6 +138,7 @@ function createGrid() {
                 element: nodeElement // Przechowujemy referencję do HTML
             });
         }
+        // Przechodzi na inny stopień
         gridLogic.push(currentRow);
     }
 }
@@ -226,7 +227,7 @@ function getNodesInShortestPathOrder(finishNode) {
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!! ANIMACJA !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-// Funkcja do czyszczenia śladów po poprzednim wyszukiwaniu
+// Funkcja do czyszczenia śladów po poprzednim wyszukiwaniu (RESET/START)
 function clearPathsAndVisited() {
     for (let row of gridLogic) {
         for (let node of row) {
@@ -271,7 +272,7 @@ function ramdomizewalls(densityVal) {
 // ++++++++++++++++++++++++++++++++++ Animacja ++++++++++++++++++++++++++++++++++
 
 function animateDijkstraStep() {
-    // Pauza
+    // Pauza (STOP)
     if (isPaused) return;
 
     // Predkosc dynamiczna
@@ -387,7 +388,7 @@ document.getElementById('start').addEventListener('click', () => {
 document.getElementById('stop').addEventListener('click', () => {
     const stopBtn = document.getElementById('stop');
     
-    // Zabezpieczenie: jeśli nie ma nic do animowania, nic nie rób
+    // Zabezpieczenie 6: jeśli nie ma nic do animowania
     if (savedVisitedNodes.length === 0) return; 
 
     if (isPaused) {
@@ -400,6 +401,8 @@ document.getElementById('stop').addEventListener('click', () => {
         isPaused = true;
         clearTimeout(animationTimer);
         stopBtn.innerText = "Resume"; // Zmiana napisu na przycisku
+        // Czysci wagi
+        node.element.innerText = '';
     }
 });
 
@@ -470,7 +473,7 @@ const placeStartBtn = document.getElementById('placeStartBtn');
 const placeEndBtn = document.getElementById('placeEndBtn');
 
 // Start + End
-
+// Ustawienie Startu
 placeStartBtn.addEventListener('click', () => {
     placingStartMode = true;
     placingEndMode = false;
@@ -478,6 +481,7 @@ placeStartBtn.addEventListener('click', () => {
     placeEndBtn.innerText = "Place End";
 });
 
+// Ustawienie Konca
 placeEndBtn.addEventListener('click', () => {
     placingEndMode = true;
     placingStartMode = false;
@@ -485,7 +489,7 @@ placeEndBtn.addEventListener('click', () => {
     placeStartBtn.innerText = "Place Start";
 });
 
-// Temy
+// Temy Standart+Dark
 
 document.getElementById('themeSelect').addEventListener('change', (e) => {
     if (e.target.value === 'dark') {

@@ -1,4 +1,5 @@
 /* --- Temy dla strony --- */
+/* Standart */
 :root {
     --bg-color: #e0d7ff;
     --bg-color2: #744eff;
@@ -16,7 +17,7 @@
     --slider-bg: linear-gradient(90deg, #744eff, #a94eff, #744eff);
     --slider-sbg: #000000;
 }
-
+/* Dark theme */
 body.dark-theme {
     --bg-color: #121212;
     --bg-color2: #2c2c2c;
