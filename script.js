@@ -50,6 +50,9 @@ function createGrid() {
     // Wyczyśczenie siatki
     gridContainer.innerHTML = '';
     gridLogic = [];
+    // Czyszczenie czasu
+    document.getElementById('timer').innerText = "Czas: 0.00 ms (0.000 s)";
+
 
     // Zabezpieczenia 2
     START_NODE.row = parseInt(document.getElementById('startrow').value);
@@ -170,10 +173,10 @@ function dijkstra(grid, startNodeCoords, endNodeCoords) {
 
     // Główna pętla algorytmu
     while (unvisitedNodes.length > 0) {
-        // Sortujemy węzły po najkrótszym dystansie
+        // Sortujemy węzły po najkrótszym dystansie(Na początku to punkt startowy) 
         unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
         
-        // Pobieramy węzeł z najmniejszym dystansem (shift() pobiera najblizszy wezel)
+        // Biezemy element o najkrótszym dystansie (shift() pobiera najblizszy (pierwszy) element ciągu)
         const closestNode = unvisitedNodes.shift();
 
         // Jeśli trafiliśmy na ścianę, omijamy ją
@@ -213,7 +216,7 @@ function getUnvisitedNeighbors(node, grid) {
     if (row < grid.length - 1) neighbors.push(grid[row + 1][col]);
     if (col > 0) neighbors.push(grid[row][col - 1]);
     if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]);
-    
+    // Filtruje jeszcze nieodwiedzone sąsiednie klatki
     return neighbors.filter(neighbor => !neighbor.isVisited);
 }
 
@@ -381,8 +384,19 @@ document.getElementById('start').addEventListener('click', () => {
     // Czyścimy siatke ale zostawiamy ściany
     clearPathsAndVisited();
 
+    // Początek pomiaru
+    const startTime = performance.now();
+
     // Obliczamy Dijkstrę 
     savedVisitedNodes = dijkstra(gridLogic, START_NODE, END_NODE);
+    
+    // Koniec pomiaru 
+    const endTime = performance.now();
+    const timeMs = endTime - startTime;
+    const timeS = timeMs / 1000;
+    document.getElementById('timer').innerText = `Czas: ${timeMs.toFixed(2)} ms (${timeS.toFixed(4)} s)`;
+
+    // Zapisanie danych
     const endNode = gridLogic[END_NODE.row][END_NODE.col];
     savedPathNodes = getNodesInShortestPathOrder(endNode);
     
@@ -440,7 +454,8 @@ document.getElementById('reset').addEventListener('click', () => {
     savedPathNodes = [];
     
     document.getElementById('stop').innerText = "Stop";
-    
+    // Czyszczenie czasu
+    document.getElementById('timer').innerText = "Czas: 0.00 ms (0.000 s)";
     // Funkcja czyszcząca kolory
     clearPathsAndVisited(); 
 });
