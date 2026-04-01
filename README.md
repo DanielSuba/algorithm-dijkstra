@@ -1,4 +1,7 @@
 # algorithm-dijkstra
+
+Demo: https://danielsuba.github.io/algorithm-dijkstra/
+
 Algorithm dijkstra jest to interaktywna aplikacja webowa, która została wykonana jako projekt zadany przez uczelnię UWB. Projekt pozwala na żywo obserwować działanie algorytmu dijkstry i w jaki sposób on przeszukuje przestrzeń w poszukiwaniu najkrótszej drogi do końca.
 Główne funkcje:
 * Interaktywna siatka umożliwia samodzielne definiowanie wymiarów planszy (2d), ustawianie punktu startowego i końcowego oraz ręczne rysowanie ścian (przeszkód).
