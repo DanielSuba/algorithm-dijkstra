@@ -232,6 +232,79 @@ function getNodesInShortestPathOrder(finishNode) {
     return nodesInShortestPathOrder;
 }
 
+// [----------------------------------- A* ------------------------------------]
+// Heurystyka: odległość Manhattan (ruch tylko góra/dół/lewo/prawo)
+function manhattanDistance(nodeA, nodeB) {
+    return Math.abs(nodeA.row - nodeB.row) + Math.abs(nodeA.col - nodeB.col);
+}
+
+function astar(grid, startNodeCoords, endNodeCoords) {
+    const visitedNodesInOrder = [];
+    const unvisitedNodes = []; // W A* często nazywane 'Open Set'
+
+    // Inicjalizacja węzłów dla algorytmu
+    for (let row of grid) {
+        for (let node of row) {
+            node.distance = Infinity; // W A* to jest koszt 'g' (odległość od startu)
+            node.f = Infinity;        // Koszt całkowity f = g + h
+            node.isVisited = false;
+            node.previousNode = null;
+            unvisitedNodes.push(node);
+        }
+    }
+
+    const startNode = grid[startNodeCoords.row][startNodeCoords.col];
+    const endNode = grid[endNodeCoords.row][endNodeCoords.col];
+
+    // Ustawienia początkowe dla startu
+    startNode.distance = 0; // g = 0
+    startNode.f = manhattanDistance(startNode, endNode); // f = g + h, gdzie g=0
+
+    while (unvisitedNodes.length > 0) {
+        // Sortujemy węzły po najmniejszym koszcie całkowitym f
+        unvisitedNodes.sort((nodeA, nodeB) => nodeA.f - nodeB.f);
+
+        // Pobieramy węzeł z najmniejszym f
+        const closestNode = unvisitedNodes.shift();
+
+        // Jeśli trafiliśmy na ścianę, omijamy ją
+        if (closestNode.isWall) continue;
+
+        // Jeśli najlepszy węzeł ma f = Infinity, cel jest nieosiągalny
+        if (closestNode.f === Infinity) return visitedNodesInOrder;
+
+        // Oznaczamy jako odwiedzony
+        closestNode.isVisited = true;
+        visitedNodesInOrder.push(closestNode);
+
+        // Jeśli dotarliśmy do endu, kończymy szukanie
+        if (closestNode === endNode) return visitedNodesInOrder;
+
+        // Aktualizujemy sąsiadów dla A*
+        updateUnvisitedNeighborsAstar(closestNode, endNode, grid);
+    }
+    return visitedNodesInOrder;
+}
+
+// Funkcja aktualizuje koszty sąsiadów dla A*
+function updateUnvisitedNeighborsAstar(node, endNode, grid) {
+    // Używamy tej samej funkcji pobierającej sąsiadów
+    const unvisitedNeighbors = getUnvisitedNeighbors(node, grid);
+    
+    for (const neighbor of unvisitedNeighbors) {
+        // Koszt dojścia do sąsiada przez obecny węzeł (g obecnego + 1)
+        const tentativeGScore = node.distance + 1;
+
+        // Jeśli znaleźliśmy lepszą (krótszą) drogę do sąsiada
+        if (tentativeGScore < neighbor.distance) {
+            neighbor.previousNode = node; // Zapisujemy skąd przyszliśmy
+            neighbor.distance = tentativeGScore; // Aktualizujemy g
+            // Obliczamy f = g + h
+            neighbor.f = neighbor.distance + manhattanDistance(neighbor, endNode);
+        }
+    }
+}
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!! ANIMACJA !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 // Funkcja do czyszczenia śladów po poprzednim wyszukiwaniu (RESET/START)
@@ -383,13 +456,18 @@ document.getElementById('start').addEventListener('click', () => {
 
     // Czyścimy siatke ale zostawiamy ściany
     clearPathsAndVisited();
+    // Pobieramy wybrany algorytm
+    const selectedAlgo = document.getElementById('algoSelect').value;
 
     // Początek pomiaru
     const startTime = performance.now();
 
     // Obliczamy Dijkstrę 
-    savedVisitedNodes = dijkstra(gridLogic, START_NODE, END_NODE);
-    
+    if (selectedAlgo === 'dijkstra') {
+        savedVisitedNodes = dijkstra(gridLogic, START_NODE, END_NODE);
+    } else if (selectedAlgo === 'astar') {
+        savedVisitedNodes = astar(gridLogic, START_NODE, END_NODE);
+    }
     // Koniec pomiaru 
     const endTime = performance.now();
     const timeMs = endTime - startTime;
