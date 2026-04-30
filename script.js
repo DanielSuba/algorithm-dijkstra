@@ -305,6 +305,50 @@ function updateUnvisitedNeighborsAstar(node, endNode, grid) {
     }
 }
 
+// -------------------------- DFS / Depth-First Search --------------------------]
+function depthFirstSearch(grid, startNodeCoords, endNodeCoords) {
+    const visitedNodesInOrder = [];
+    const stack = [];
+
+    // Reset danych algorytmu
+    for (let row of grid) {
+        for (let node of row) {
+            node.distance = Infinity;
+            node.isVisited = false;
+            node.previousNode = null;
+        }
+    }
+
+    const startNode = grid[startNodeCoords.row][startNodeCoords.col];
+    const endNode = grid[endNodeCoords.row][endNodeCoords.col];
+
+    startNode.distance = 0;
+    stack.push(startNode);
+
+    while (stack.length > 0) {
+        const currentNode = stack.pop();
+
+        if (currentNode.isWall || currentNode.isVisited) continue;
+
+        currentNode.isVisited = true;
+        visitedNodesInOrder.push(currentNode);
+
+        if (currentNode === endNode) return visitedNodesInOrder;
+
+        const neighbors = getUnvisitedNeighbors(currentNode, grid).reverse();
+
+        for (const neighbor of neighbors) {
+            if (!neighbor.isWall && !neighbor.isVisited) {
+                neighbor.previousNode = currentNode;
+                neighbor.distance = currentNode.distance + 1;
+                stack.push(neighbor);
+            }
+        }
+    }
+
+    return visitedNodesInOrder;
+}
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!! ANIMACJA !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 // Funkcja do czyszczenia śladów po poprzednim wyszukiwaniu (RESET/START)
@@ -467,6 +511,8 @@ document.getElementById('start').addEventListener('click', () => {
         savedVisitedNodes = dijkstra(gridLogic, START_NODE, END_NODE);
     } else if (selectedAlgo === 'astar') {
         savedVisitedNodes = astar(gridLogic, START_NODE, END_NODE);
+    } else if (selectedAlgo === 'dfs') {
+        savedVisitedNodes = depthFirstSearch(gridLogic, START_NODE, END_NODE);
     }
     // Koniec pomiaru 
     const endTime = performance.now();
@@ -475,6 +521,7 @@ document.getElementById('start').addEventListener('click', () => {
     document.getElementById('timer').innerText = `Czas: ${timeMs.toFixed(2)} ms (${timeS.toFixed(4)} s)`;
 
     // Zapisanie danych
+    const startNode = gridLogic[START_NODE.row][START_NODE.col];
     const endNode = gridLogic[END_NODE.row][END_NODE.col];
     savedPathNodes = getNodesInShortestPathOrder(endNode);
     

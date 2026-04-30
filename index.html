@@ -3,20 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wizualizacja Algorytmu Dijkstra</title>
+    <title>Wizualizacja algorytmów grafowych</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Górny pasek -->
     <header class="top-bar">
         <div class="logo-area">
             <img src="Logo-uwb.png" alt="Logo" class="logo-img">
         </div>
+
         <div class="titles">
-            <h2>Wizualizacja Algorytmu Dijkstra</h2>
+            <h1>Wizualizacja algorytmów grafowych</h1>
+            <p>Dijkstra • A* • Depth-First Search</p>
         </div>
-        
+
         <div class="theme-switch-area">
+            <label for="themeSelect" class="visually-hidden">Wybór motywu</label>
             <select id="themeSelect" class="theme-select">
                 <option value="standard">Standard Theme</option>
                 <option value="dark">Dark Theme</option>
@@ -24,75 +26,90 @@
         </div>
     </header>
 
-    <div class="main-content">
-    <!-- Sterowniki generacji-->
-    <div class="controls">
-    <label>Height: <input id="row" type="number" value="10" min="1" max="50"></label>
-    <label>Length: <input id="col" type="number" value="10" min="1" max="50"></label>
-    <button id="generate" class="button">Generate</button>
-    <button id="changeMode">Show Weights: OFF</button>
-    
-    </div>
-  <table>
-    <!-- Start + End-->
-    <div class="controls">
-    <label>StartRow: <input id="startrow" type="number" value="5" min="1" max="50"></label>
-    <label>StartCol: <input id="startcol" type="number" value="2" min="1" max="50"></label>
-    <button id="placeStartBtn">Place Start</button>
+    <main class="app-layout">
+        <aside class="sidebar">
+            <section class="panel">
+                <h2>Siatka</h2>
+                <label>Height
+                    <input id="row" type="number" value="10" min="2" max="50">
+                </label>
+                <label>Length
+                    <input id="col" type="number" value="10" min="2" max="50">
+                </label>
+                <button id="generate" class="button">Generate</button>
+                <button id="changeMode" class="button">Show Weights: OFF</button>
+            </section>
 
-    </div>
-    <div class="controls">
-    <label>EndRow: <input id="endrow" type="number" value="5" min="1" max="50"></label>
-    <label>EndCol: <input id="endcol" type="number" value="8" min="1" max="50"></label>
-    <button id="placeEndBtn">Place End</button>
-    </div>
+            <section class="panel">
+                <h2>Start i koniec</h2>
+                <label>StartRow
+                    <input id="startrow" type="number" value="5" min="0" max="50">
+                </label>
+                <label>StartCol
+                    <input id="startcol" type="number" value="2" min="0" max="50">
+                </label>
+                <button id="placeStartBtn" class="button">Place Start</button>
 
-    <!-- Speed --> <!-- Density--> 
-  <div class="slidecontainer">
-  <table>
-      <tr>
-        <th>Speed: <output id="speedVal"></output></th>
-        <th><input type="range" min="1" max="500" value="100" class="slider" id="speed"></th>
-        
-        <th>
-            <div class="theme-switch-area" style="justify-content: flex-start; padding-left: 15px;">
-                <select id="algoSelect" class="theme-select">
-                    <option value="dijkstra">Algorithm: Dijkstra</option>
-                    <option value="astar">Algorithm: A* (A-Star)</option>
-                </select>
+                <label>EndRow
+                    <input id="endrow" type="number" value="5" min="0" max="50">
+                </label>
+                <label>EndCol
+                    <input id="endcol" type="number" value="8" min="0" max="50">
+                </label>
+                <button id="placeEndBtn" class="button">Place End</button>
+            </section>
 
-                <select id="visitedColor" class="theme-select">
-                    <option value="gradientV1">Gradient V1</option>
-                    <option value="gradientV2">Gradient V2</option>
-                    <option value="yellow">Blue</option>
-                    <option value="black">Black</option>
-                    <option value="random">Random</option>
-                </select>
+            <section class="panel">
+                <h2>Algorytm</h2>
+                <label>Wybierz algorytm
+                    <select id="algoSelect" class="theme-select full-width">
+                        <option value="dijkstra">Algorithm: Dijkstra</option>
+                        <option value="astar">Algorithm: A* (A-Star)</option>
+                        <option value="dfs">Algorithm: Depth-First Search</option>
+                    </select>
+                </label>
+
+                <label>Kolor odwiedzonych pól
+                    <select id="visitedColor" class="theme-select full-width">
+                        <option value="gradientV1">Gradient V1</option>
+                        <option value="gradientV2">Gradient V2</option>
+                        <option value="blue">Blue</option>
+                        <option value="black">Black</option>
+                        <option value="random">Random</option>
+                    </select>
+                </label>
+            </section>
+
+            <section class="panel">
+                <h2>Animacja</h2>
+                <label>Speed: <output id="speedVal">100</output>
+                    <input type="range" min="1" max="500" value="100" class="slider" id="speed">
+                </label>
+                <label>Density: <output id="densityVal">30</output>%
+                    <input type="range" min="0" max="100" value="30" class="slider" id="density">
+                </label>
+                <button id="ramdomize" class="button">Randomize walls</button>
+            </section>
+
+            <section class="panel actions-panel">
+                <button id="start" class="button primary">Start</button>
+                <button id="stop" class="button">Stop/Resume</button>
+                <button id="reset" class="button">Reset</button>
+                <span id="timer" class="timer">Czas: 0.00 ms (0.000 s)</span>
+            </section>
+        </aside>
+
+        <section class="visualization-area">
+            <div class="visualization-header">
+                <h2>Działanie algorytmu</h2>
+                <p>Kliknij pola, aby dodać lub usunąć ściany. Użyj panelu po lewej do sterowania wizualizacją.</p>
             </div>
-        </th>
-      </tr>
-    </table>
-  <table>
-      <tr>
-        <th>Density:</th>
-        <th><input type="range" min="0" max="100" value="30" class="slider" id="density"></th>
-        <th><button id="ramdomize" class="button">Ramdomize walls</button></th>
-      </tr>
-    </table>
-  </div>
-  <!-- Sterowniki dla dynamiki-->
-  <div class="controls">
-    <button id="start" class="button" >Start</button>
-    <button id="stop" class="button">Stop/Resume</button>
-    <button id="reset" class="button">Reset</button>
-    </div>
-    <!-- Timer -->
-    <div class="controls">
-    <span id="timer">Czas: 0.00 ms (0.000 s)</span>
-    </div>
-    <!-- Siatka-->
-    <div id="grid-container"></div>
-  </div>
+            <div class="grid-wrapper">
+                <div id="grid-container"></div>
+            </div>
+        </section>
+    </main>
+
     <script src="script.js"></script>
 </body>
 </html>
