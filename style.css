@@ -132,6 +132,13 @@ body {
     display: flex;
     flex-direction: column;
     gap: 14px;
+    
+    /* --- NOWE REGUŁY DLA SCROLLA --- */
+    max-height: calc(100vh - 130px); /* Ogranicza wysokość panelu (odlicza miejsce na górny pasek i marginesy) */
+    overflow-y: auto;                /* Włącza pionowy suwak, gdy treść się nie mieści */
+    position: sticky;                /* Zatrzymuje panel w widocznym miejscu na ekranie */
+    top: 100px;                      /* Ustawia odstęp od góry pod przyklejonym headerem */
+    padding-right: 6px;              /* Zapobiega nachodzeniu suwaka na teksty i przyciski */
 }
 
 .panel {
@@ -350,4 +357,21 @@ button:hover,
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     }
+	
+	.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--btn-bg);
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--btn-hover);
+}
 }
